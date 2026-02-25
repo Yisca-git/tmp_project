@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, AfterViewInit, inject, signal, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { PaginatorModule } from 'primeng/paginator';
@@ -15,7 +15,8 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
   templateUrl: './list-models-component.html',
   styleUrl: './list-models-component.scss',
 })
-export class ListModelsComponent implements OnInit {
+export class ListModelsComponent implements OnInit, AfterViewInit {
+  private elementRef = inject(ElementRef);
   private modelService = inject(ModelService);
   private route = inject(ActivatedRoute); 
   private router = inject(Router);   
@@ -49,6 +50,25 @@ export class ListModelsComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit(): void {
+    this.setupScrollAnimation();
+  }
+
+  setupScrollAnimation(): void {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    setTimeout(() => {
+      const items = this.elementRef.nativeElement.querySelectorAll('.model-item');
+      items.forEach((item: Element) => observer.observe(item));
+    }, 100);
+  }
+
   loadModels() {
     const colorsParam = this.colors.length > 0 ? this.colors.join(',') : undefined;
     this.modelService.getModels(
@@ -66,6 +86,7 @@ export class ListModelsComponent implements OnInit {
         this.hasPrev.set(data?.hasPrev || false);
         this.hasNext.set(data?.hasNext || false);
         this.loading.set(false);
+        setTimeout(() => this.setupScrollAnimation(), 100);
       },
       error: (err) => {
         console.error('Error loading models:', err);

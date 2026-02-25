@@ -3,7 +3,18 @@
     <div class="hero-content">
       <span class="sub-title">קולקציית 2026</span>
       <h1>יוקרה שנשזרת בכל תפר</h1>
-      <p>גלי את מבחר השמלות האקסקלוסיביות שלנו לאירועים בלתי נשכחים. יופי, נוחות וסטייל במקום אחד.</p>
+      <p class="hero-main-text">גלי את מבחר השמלות האקסקלוסיביות שלנו לאירועים בלתי נשכחים. יופי, נוחות וסטייל במקום אחד.</p>
+      <div class="hero-highlight">
+        <p class="highlight-text">שמלת החלומות שלך מחכה לך כאן</p>
+        <p class="hero-description">
+          כל שמלה בקולקציה שלנו מעוצבת בקפידה מירבית, עם תשומת לב לכל פרט קטן. 
+          בין אם את מחפשת שמלה לחתונה, לאירוע מיוחד או לערב חגיגי - 
+          אנחנו כאן להפוך את החלום שלך למציאות.
+        </p>
+        <p class="hero-cta">
+          מבחר ענק של דגמים בלעדיים • התאמה אישית מושלמת • איכות פרימיום
+        </p>
+      </div>
       <p-button label="לצפייה בקולקציה המלאה" 
                 icon="pi pi-arrow-left" 
                 iconPos="left" 
@@ -26,8 +37,12 @@
           <div class="category-image-wrapper">
             <img [src]="categoryImages[cat.id] || '/assets/default-cat.png'" [alt]="cat.name">
             <div class="category-overlay">
-              <h3>{{ cat.name }}</h3>
-              <span>צפי בדגמים</span>
+              <div class="category-content">
+                <span class="category-label">קטגוריה</span>
+                <h3>{{ cat.name }}</h3>
+                <p class="category-description">{{ cat.description }}</p>
+                <span class="category-cta">צפי בדגמים →</span>
+              </div>
             </div>
           </div>
         </div>

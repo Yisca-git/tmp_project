@@ -6,28 +6,23 @@
   </div>
 
   <main class="users-content">
-    <h2 class="page-title">ניהול משתמשים</h2>
-    <p class="page-subtitle">חיפוש משתמשים והוספת משתמשים חדשים</p>
-
-    <div class="actions-section">
-      <div class="section-info">
-        <h3>הוספת משתמש חדש</h3>
-        <p>הוסף משתמש או מנהל חדש למערכת</p>
+    <div class="title-section">
+      <div>
+        <h2 class="page-title">ניהול משתמשים</h2>
+        <p class="page-subtitle">חיפוש משתמשים והוספת משתמשים חדשים</p>
       </div>
-      <p-button label="הוסף משתמש" icon="pi pi-plus" (onClick)="openAddDialog()"></p-button>
+      <div class="title-actions">
+        <div class="search-compact">
+          <input pInputText type="text" [(ngModel)]="searchQuery" placeholder="חפש משתמש..." (keyup.enter)="searchUsers()" (input)="searchUsers()" />
+          <i class="pi pi-search search-icon"></i>
+        </div>
+        <p-button label="הוסף משתמש" icon="pi pi-plus" severity="success" (onClick)="openAddDialog()"></p-button>
+      </div>
     </div>
 
-    <div class="search-section">
-      <div class="search-controls">
-        <input pInputText type="number" [(ngModel)]="searchId" placeholder="הכנס מזהה משתמש" />
-        <p-button label="חפש" icon="pi pi-search" (onClick)="searchUserById()"></p-button>
-        <p-button label="הצג הכל" icon="pi pi-list" severity="secondary" (onClick)="loadAllUsers()"></p-button>
-      </div>
-      
-      <ng-container *ngIf="searchError()">
-        <div class="error-message">{{ searchError() }}</div>
-      </ng-container>
-    </div>
+    <ng-container *ngIf="searchError()">
+      <div class="error-message">{{ searchError() }}</div>
+    </ng-container>
 
     <p-table [value]="users()" [loading]="loading()" styleClass="p-datatable-striped">
       <ng-template pTemplate="header">
@@ -65,15 +60,8 @@
   </main>
 </div>
 
-<p-dialog [(visible)]="addDialog" header="הוספת משתמש חדש" [modal]="true" [style]="{width: '650px'}">
+<p-dialog [(visible)]="addDialog" header="הוספת משתמש חדש" [modal]="true" [style]="{width: '650px'}" styleClass="model-dialog">
   <div class="add-dialog-content">
-    <div class="dialog-intro">
-      <div class="icon-wrapper">
-        <i class="pi pi-user-plus"></i>
-      </div>
-      <p>מלא את הפרטים להוספת משתמש או מנהל חדש למערכת</p>
-    </div>
-
     <div class="form-row">
       <div class="form-field">
         <label>שם פרטי *</label>
@@ -111,10 +99,10 @@
                   [style]="{width: '100%'}"></p-select>
       </div>
     </div>
-  </div>
-  
-  <div class="dialog-actions">
-    <p-button label="ביטול" severity="secondary" (onClick)="addDialog.set(false)"></p-button>
-    <p-button label="הוסף משתמש" icon="pi pi-check" (onClick)="saveUser()"></p-button>
+
+    <div class="dialog-actions">
+      <p-button label="שמור שינויים" icon="pi pi-check" (onClick)="saveUser()"></p-button>
+      <p-button label="ביטול" severity="secondary" (onClick)="addDialog.set(false)"></p-button>
+    </div>
   </div>
 </p-dialog>

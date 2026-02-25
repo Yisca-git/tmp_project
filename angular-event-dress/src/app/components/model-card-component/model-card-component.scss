@@ -5,21 +5,65 @@ $bg-color: #faf8f9;
 .model-card {
   height: 100%;
   margin-bottom: 1rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   font-family: $main-font;
   background: $bg-color;
   border: 1px solid #e8e8e8;
   
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 35px rgba(107, 91, 94, 0.25);
   }
 
-  .card-image {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 6px 6px 0 0;
+  .image-container {
+    position: relative;
+    overflow: hidden;
+
+    .card-image {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 6px 6px 0 0;
+      transition: transform 0.4s ease;
+    }
+
+    .hover-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(107, 91, 94, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+
+      .view-text {
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 500;
+        font-family: $main-font;
+        letter-spacing: 1px;
+        transform: translateY(10px);
+        transition: transform 0.3s ease;
+      }
+    }
+
+    &:hover {
+      .card-image {
+        transform: scale(1.1);
+      }
+
+      .hover-overlay {
+        opacity: 1;
+
+        .view-text {
+          transform: translateY(0);
+        }
+      }
+    }
   }
 
   .card-content {

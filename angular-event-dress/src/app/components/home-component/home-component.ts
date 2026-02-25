@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, AfterViewInit, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -16,10 +16,11 @@ import { ModelCardComponent } from '../model-card-component/model-card-component
   templateUrl: './home-component.html',
   styleUrls: ['./home-component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
   private router = inject(Router);
   private modelService = inject(ModelService);
   private categoryService = inject(CategoryService); // הזרקת שירות הקטגוריות
+  private elementRef = inject(ElementRef);
 
   categoryImages: { [key: number]: string } = {
     1: '/cat1.png', // נניח ש-1 זה שמלות כלה
@@ -31,9 +32,40 @@ export class HomeComponent implements OnInit {
     this.loadCategories();
     this.loadRandomModels();
   }
+
+  ngAfterViewInit() {
+    this.setupScrollAnimations();
+  }
+
   categories = signal<CategoryModel[]>([]); 
   popularDresses = signal<ModelModel[]>([]);
  
+  private setupScrollAnimations() {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    );
+
+    setTimeout(() => {
+      const elements = this.elementRef.nativeElement.querySelectorAll(
+        '.section-header, .category-item, .model-item'
+      );
+      
+      elements.forEach((el: Element) => {
+        el.classList.add('scroll-animate');
+        observer.observe(el);
+      });
+    }, 100);
+  }
 
   loadCategories() {
     this.categoryService.getCategories().subscribe({

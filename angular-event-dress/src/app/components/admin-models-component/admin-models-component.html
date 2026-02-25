@@ -2,118 +2,161 @@
   <div class="header-section">
     <div class="header-actions">
       <p-button label="חזור לאיזור ניהול" icon="pi pi-arrow-right" (onClick)="goBack()"></p-button>
-      <p-button label="הוסף מודל חדש" icon="pi pi-plus" severity="success" (onClick)="openAddModel()"></p-button>
     </div>
   </div>
 
   <main class="models-content">
-    <h2 class="page-title">ניהול מוצרים</h2>
-    <p class="page-subtitle">צפייה, עריכה והוספת מוצרים חדשים למערכת</p>
+    <div class="title-section">
+      <div>
+        <h2 class="page-title">ניהול מודלים</h2>
+        <p class="page-subtitle">צפייה, עריכה והוספת מודלים חדשים למערכת</p>
+      </div>
+      <div class="title-actions">
+        <div class="search-compact">
+          <input pInputText type="text" [(ngModel)]="searchQuery" placeholder="חפש מודל..." (keyup.enter)="searchModels()" (input)="searchModels()" />
+          <i class="pi pi-search search-icon"></i>
+        </div>
+        <p-button label="הוסף מודל" icon="pi pi-plus" severity="success" (onClick)="openAddModel()"></p-button>
+      </div>
+    </div>
     
     @if (loading()) {
       <div class="loading-container">
-        <p-progressSpinner></p-progressSpinner>
-        <p>טוען מוצרים...</p>
+        <div class="spinner"></div>
+        <p>טוען מודלים...</p>
+      </div>
+    } @else if (models().length === 0) {
+      <div class="empty-state">
+        <i class="pi pi-inbox"></i>
+        <h3>אין מודלים</h3>
+        <p>התחל בהוספת מודל ראשון</p>
       </div>
     } @else {
-      @if (models().length === 0) {
-        <div class="empty-state">
-          <i class="pi pi-search"></i>
-          <p>אין מוצרים במערכת</p>
-        </div>
-      } @else {
-        <div class="models-grid">
-          @for (model of models(); track model.id) {
-            <div class="model-item">
-              <div class="model-card">
-                <div class="admin-actions">
-                  <button class="action-btn edit" (click)="openEditDialog(model)" title="עריכה">
-                    <i class="pi pi-pencil"></i>
-                  </button>
-                  <button class="action-btn delete" (click)="openDeleteDialog(model)" title="מחיקה">
-                    <i class="pi pi-trash"></i>
-                  </button>
-                </div>
-                <app-model-card-component [model]="model"></app-model-card-component>
-              </div>
+      <div class="models-grid">
+        @for (model of models(); track model.id) {
+          <div class="model-item" (click)="openActionDialog(model)">
+            <app-model-card-component [model]="model" [disableClick]="true"></app-model-card-component>
+            <div class="admin-overlay">
+              <span class="admin-text">לחץ לניהול</span>
             </div>
-          }
-        </div>
-      }
+          </div>
+        }
+      </div>
     }
   </main>
 </div>
 
-<p-dialog [(visible)]="editDialog" [modal]="true" [style]="{width: '900px'}" [closable]="true" styleClass="edit-model-dialog">
+<p-dialog [(visible)]="actionDialog" [modal]="true" [style]="{width: '400px'}" [header]="'בחר פעולה'" styleClass="action-dialog">
+  @if (selectedModel) {
+    <div class="action-content">
+      <p>מה ברצונך לעשות עם המודל?</p>
+      <strong>{{ selectedModel.name }}</strong>
+      <div class="action-buttons">
+        <p-button label="עריכה" icon="pi pi-pencil" (onClick)="confirmEdit()" styleClass="edit-action"></p-button>
+        <p-button label="מחיקה" icon="pi pi-trash" severity="danger" (onClick)="confirmDeleteFromAction()"></p-button>
+      </div>
+    </div>
+  }
+</p-dialog>
+
+<p-dialog [(visible)]="editDialog" [modal]="true" [style]="{width: '900px'}" [closable]="true" [header]="addingModel ? 'הוספת מודל חדש' : 'עריכת מודל'" styleClass="model-dialog">
   @if (editingModel) {
-    <div class="model-edit-page">
-      <div class="model-details">
-        <div class="image-section">
-          <img [src]="editingModel.imgUrl" [alt]="editingModel.description" class="model-image" />
-          <div class="field">
-            <label>תמונה (URL)</label>
-            <input pInputText [(ngModel)]="editingModel.imgUrl" placeholder="הכנס קישור לתמונה" />
+    <div class="edit-dialog-content">
+      <div class="form-section">
+        <div class="form-row">
+          <div class="form-field">
+            <label>שם המודל *</label>
+            <input pInputText [(ngModel)]="editingModel.name" placeholder="הכנס שם מודל" />
+          </div>
+          <div class="form-field">
+            <label>צבע *</label>
+            <input pInputText [(ngModel)]="editingModel.color" placeholder="לדוגמה: אדום" />
           </div>
         </div>
 
-        <div class="info-section">
-          <div class="field">
-            <label class="form-label">שם המוצר</label>
-            <input pInputText [(ngModel)]="editingModel.name" class="large-input" />
+        <div class="form-field">
+          <label>תיאור *</label>
+          <textarea pTextarea [(ngModel)]="editingModel.description" rows="3" placeholder="תיאור המודל"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>מחיר בסיס *</label>
+            <p-inputNumber [(ngModel)]="editingModel.basePrice" mode="currency" currency="ILS" locale="he-IL"></p-inputNumber>
           </div>
-
-          <div class="field">
-            <label class="form-label">תיאור</label>
-            <textarea pTextarea [(ngModel)]="editingModel.description" rows="3" class="large-input"></textarea>
+          <div class="form-field">
+            <label>קטגוריות *</label>
+            <p-multiselect [(ngModel)]="editingModel.categories" [options]="categories()" optionLabel="name" placeholder="בחר קטגוריות"></p-multiselect>
           </div>
+        </div>
 
-          <div class="divider"></div>
-
-          <div class="details-grid">
-            <div class="field">
-              <label class="form-label">מחיר בסיס</label>
-              <p-inputNumber [(ngModel)]="editingModel.basePrice" mode="currency" currency="ILS" locale="he-IL" [style]="{'width':'100%'}"></p-inputNumber>
+        <div class="form-field">
+          <label>קישור לתמונה *</label>
+          <input pInputText [(ngModel)]="editingModel.imgUrl" placeholder="https://..." />
+          @if (editingModel.imgUrl) {
+            <div class="image-preview-small">
+              <img [src]="editingModel.imgUrl" [alt]="editingModel.name" />
             </div>
-            <div class="field">
-              <label class="form-label">צבע</label>
-              <input pInputText [(ngModel)]="editingModel.color" />
-            </div>
-          </div>
+          }
+        </div>
+      </div>
 
-          <div class="field">
-            <label class="form-label">קטגוריות</label>
-            <p-multiselect [(ngModel)]="editingModel.categories" [options]="categories()" optionLabel="name" placeholder="בחר קטגוריות" [style]="{'width':'100%'}"></p-multiselect>
-          </div>
+      <div class="sizes-section">
+        <div class="section-header">
+          <h3>מידות זימינות</h3>
+          <p-button label="הוסף מידה" icon="pi pi-plus" size="small" (onClick)="openAddDress()"></p-button>
+        </div>
 
-          <div class="divider"></div>
-
-          <div class="dresses-section">
-            <div class="section-header">
-              <h3>שמלות במודל</h3>
-              <p-button label="הוסף שמלה" icon="pi pi-plus" size="small" (onClick)="openAddDress()"></p-button>
-            </div>
-
-            @if (editingDress) {
-              <div class="dress-form">
-                <div class="field">
-                  <label>מידה</label>
-                  <input pInputText [(ngModel)]="editingDress.size" />
-                </div>
-                <div class="field">
-                  <label>מחיר</label>
-                  <p-inputNumber [(ngModel)]="editingDress.price" mode="currency" currency="ILS" locale="he-IL"></p-inputNumber>
-                </div>
-                <div class="field">
-                  <label>הערה</label>
-                  <input pInputText [(ngModel)]="editingDress.note" />
-                </div>
-                <div class="dress-actions">
-                  <p-button label="ביטול" severity="secondary" size="small" (onClick)="editingDress = null"></p-button>
-                  <p-button label="שמור" size="small" (onClick)="saveDress()"></p-button>
-                </div>
+        @if (editingDress) {
+          <div class="dress-form">
+            <div class="form-row">
+              <div class="form-field">
+                <label>מידה *</label>
+                <input pInputText [(ngModel)]="editingDress.size" placeholder="לדוגמה: S, M, L" />
               </div>
-            }
+              <div class="form-field">
+                <label>מחיר *</label>
+                <p-inputNumber [(ngModel)]="editingDress.price" mode="currency" currency="ILS" locale="he-IL"></p-inputNumber>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>הערה (אופציונלי)</label>
+              <input pInputText [(ngModel)]="editingDress.note" placeholder="הערות נוספות" />
+            </div>
+            <div class="dress-actions">
+              <p-button label="ביטול" severity="secondary" size="small" (onClick)="cancelDressEdit()"></p-button>
+              <p-button label="שמור" size="small" (onClick)="saveDressToList()"></p-button>
+            </div>
+          </div>
+        }
 
+        @if (addingModel && tempDresses.length > 0) {
+          <p-table [value]="tempDresses" styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>מידה</th>
+                <th>מחיר</th>
+                <th>הערה</th>
+                <th>פעולות</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-dress let-i="rowIndex">
+              <tr>
+                <td>{{ dress.size }}</td>
+                <td>{{ dress.price }} ₪</td>
+                <td>{{ dress.note || '-' }}</td>
+                <td>
+                  <p-button icon="pi pi-trash" severity="danger" size="small" [text]="true" (onClick)="removeTempDress(i)"></p-button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="4" style="text-align: center;">אין מידות זמינות</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        } @else if (!addingModel && dresses().length > 0) {
             <p-table [value]="dresses()" styleClass="p-datatable-sm">
               <ng-template pTemplate="header">
                 <tr>
@@ -129,37 +172,44 @@
                   <td>{{ dress.price }} ₪</td>
                   <td>{{ dress.note || '-' }}</td>
                   <td>
-                    <p-button icon="pi pi-pencil" severity="info" size="small" (onClick)="openEditDress(dress)"></p-button>
-                    <p-button icon="pi pi-trash" severity="danger" size="small" (onClick)="confirmDeleteDress(dress)"></p-button>
+                    <p-button icon="pi pi-pencil" severity="info" size="small" [text]="true" (onClick)="openEditDress(dress)"></p-button>
+                    <p-button icon="pi pi-trash" severity="danger" size="small" [text]="true" (onClick)="confirmDeleteDress(dress)"></p-button>
                   </td>
                 </tr>
               </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="4" style="text-align: center;">אין מידות זמינות</td>
+                </tr>
+              </ng-template>
             </p-table>
+        } @else {
+          <div class="empty-sizes">
+            <i class="pi pi-inbox"></i>
+            <p>אין מידות זמינות. הוסף מידה ראשונה.</p>
           </div>
+        }
+      </div>
 
-          <div class="divider"></div>
-
-          <div class="actions-section">
-            <p-button label="ביטול" severity="secondary" (onClick)="editDialog.set(false)" styleClass="action-btn"></p-button>
-            <p-button label="שמור שינויים" (onClick)="saveModel()" styleClass="action-btn"></p-button>
-          </div>
-        </div>
+      <div class="dialog-actions">
+        <p-button label="שמור שינויים" icon="pi pi-check" (onClick)="saveModel()"></p-button>
+        <p-button label="ביטול" severity="secondary" (onClick)="editDialog.set(false)"></p-button>
       </div>
     </div>
   }
 </p-dialog>
 
-<p-dialog [(visible)]="deleteDialog" header="אזהרה!" [modal]="true" [style]="{width: '450px'}" styleClass="delete-dialog">
+<p-dialog [(visible)]="deleteDialog" [modal]="true" [style]="{width: '450px'}" [header]="'אזהרה!'" styleClass="delete-dialog">
   @if (deletingModel) {
     <div class="delete-content">
-      <i class="pi pi-exclamation-triangle warning-icon"></i>
-      <p class="warning-text">האם אתה בטוח שברצונך למחוק את המוצר?</p>
-      <p class="model-name">{{ deletingModel.description }}</p>
-      <p class="warning-note">פעולה זו לא ניתנת לביטול</p>
-    </div>
-    <div class="dialog-footer">
-      <p-button label="ביטול" severity="secondary" (onClick)="deleteDialog.set(false)"></p-button>
-      <p-button label="מחק לצמיתות" severity="danger" (onClick)="confirmDelete()"></p-button>
+      <i class="pi pi-exclamation-triangle"></i>
+      <p>האם אתה בטוח שברצונך למחוק את המודל?</p>
+      <strong>{{ deletingModel.name }}</strong>
+      <span class="warning">פעולה זו לא ניתנת לביטול</span>
+      <div class="dialog-actions">
+        <p-button label="מחק לצמיתות" severity="danger" (onClick)="confirmDelete()"></p-button>
+        <p-button label="ביטול" severity="secondary" (onClick)="deleteDialog.set(false)"></p-button>
+      </div>
     </div>
   }
 </p-dialog>

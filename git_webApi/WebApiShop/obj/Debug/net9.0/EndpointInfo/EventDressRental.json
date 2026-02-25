@@ -1668,6 +1668,10 @@
           "modelName": {
             "minLength": 1,
             "type": "string"
+          },
+          "size": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

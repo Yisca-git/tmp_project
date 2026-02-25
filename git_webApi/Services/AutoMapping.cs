@@ -19,7 +19,8 @@ namespace Services
             CreateMap<Category, NewCategoryDTO>().ReverseMap();
             CreateMap<Category, CategoryDTO>().ReverseMap();
             CreateMap<OrderItem, OrderItemDTO>()
-                .ForMember(d => d.ModelName, o => o.MapFrom(s => s.Dress.Model.Name));
+                .ForMember(d => d.ModelName, o => o.MapFrom(s => s.Dress.Model.Name))
+                .ForMember(d => d.Size, o => o.MapFrom(s => s.Dress.Size));
             CreateMap<OrderItemDTO, OrderItem>()
                 .ForMember(dest => dest.DressId, opt => opt.MapFrom(src => src.DressId));
             CreateMap<OrderItem, NewOrderItemDTO>()
@@ -37,7 +38,8 @@ namespace Services
                  .ForMember(d => d.UserFirstName,o => o.MapFrom(s => s.User.FirstName))
                  .ForMember(d => d.UserLastName, o => o.MapFrom(s => s.User.LastName))
                  .ForMember(d => d.UserEmail, o => o.MapFrom(s => s.User.Email))
-                 .ForMember(d => d.UserPhone, o => o.MapFrom(s => s.User.Phone));
+                 .ForMember(d => d.UserPhone, o => o.MapFrom(s => s.User.Phone))
+                 .ForMember(d => d.OrderItems, o => o.MapFrom(s => s.OrderItems));
             CreateMap<OrderDTO, Order>();
             CreateMap<Dress, DressDTO>()
                 .ForMember(d => d.ModelName, o => o.MapFrom(s => s.Model.Name))

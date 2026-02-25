@@ -20,15 +20,33 @@
 
         <div class="divider"></div>
 
+        @if (userService.isAdmin()) {
+          <div class="admin-notice">
+            <i class="pi pi-info-circle"></i>
+            <p>כמנהל, אינך יכול להוסיף פריטים לסל</p>
+          </div>
+          
+          <div class="selection-step">
+            <label class="form-label">מידות זמינות:</label>
+            <div class="sizes-display">
+              @for (size of sizes; track size) {
+                <span class="size-badge">{{ size }}</span>
+              }
+            </div>
+          </div>
+        } @else {
+
         <div class="selection-step">
           <label class="form-label">לבחירת מידה:</label>
-          <p-select
-            [options]="sizes"
-            [(ngModel)]="selectedSize"
-            (onChange)="onSizeChange()"
-            placeholder="בחרי מידה"
-            [style]="{'width':'100%'}">
-          </p-select>
+          <div class="sizes-display">
+            @for (size of sizes; track size) {
+              <span class="size-badge" 
+                    [class.selected]="selectedSize === size"
+                    (click)="selectSize(size)">
+                {{ size }}
+              </span>
+            }
+          </div>
         </div>
 
         @if (selectedSize) {
@@ -121,6 +139,8 @@
             </div>
 
           </div>
+        }
+
         }
 
       </div>

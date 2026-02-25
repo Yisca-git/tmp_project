@@ -16,17 +16,16 @@ export class ModelCardComponent {
   private userService = inject(UserService);
   
   @Input() model!: ModelModel;
+  @Input() disableClick: boolean = false;
 
   onImageError(event: any) {
     event.target.src = 'https://via.placeholder.com/300x400?text=No+Image';
   }
 
   onCardClick() {
-    // if (this.userService.isAdmin()) {
-    //   alert('גישה חסומה: מנהל לא יכול לצפות בדף המודל.');
-    //   this.router.navigate(['/collection']);
-    //   return;
-    // }
+    if (this.disableClick) {
+      return;
+    }
 
     console.log('Navigating to model:', this.model.id);
     this.router.navigate(['/model', this.model.id]);

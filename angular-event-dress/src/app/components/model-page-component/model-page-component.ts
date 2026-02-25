@@ -29,7 +29,7 @@ export class ModelPageComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private dressService = inject(DressService);
   public cartService = inject(CartService);
-  private userService = inject(UserService);
+  public userService = inject(UserService);
   invalidDate: boolean = false;
   conflictMessage: string = '';
   model?: ModelModel;
@@ -42,10 +42,6 @@ export class ModelPageComponent implements OnInit {
   dress?: DressModel;
   loadingAvailability: boolean = false; 
 ngOnInit(): void {
-  if (this.userService.isAdmin()) {
-    this.router.navigate(['/admin']);
-    return;
-  }
   const id = Number(this.route.snapshot.paramMap.get('id'));
 
   this.modelService.getModelById(id).subscribe({
@@ -74,6 +70,11 @@ ngOnInit(): void {
     this.availabilityChecked = false;
     this.invalidDate = false;
     this.conflictMessage = '';
+  }
+
+  selectSize(size: string): void {
+    this.selectedSize = size;
+    this.onSizeChange();
   }
 
   onDateSelect(): void {

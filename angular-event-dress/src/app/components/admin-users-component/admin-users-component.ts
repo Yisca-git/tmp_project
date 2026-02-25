@@ -32,8 +32,9 @@ export class AdminUsersComponent implements OnInit {
   private router = inject(Router);
 
   users = signal<UserModel[]>([]);
+  allUsers: UserModel[] = [];
   loading = signal(true);
-  searchId: number | null = null;
+  searchQuery: string = '';
   searchError = signal<string>('');
 
   addDialog = signal(false);
@@ -71,38 +72,56 @@ export class AdminUsersComponent implements OnInit {
   loadAllUsers(): void {
     this.loading.set(true);
     this.searchError.set('');
+    this.searchQuery = '';
 
     this.userService.getAllUsers().subscribe({
       next: (data) => {
+        this.allUsers = data;
         this.users.set(data);
         this.loading.set(false);
       },
       error: () => {
+        this.allUsers = [];
         this.users.set([]);
         this.loading.set(false);
       }
     });
   }
 
-  searchUserById(): void {
-    if (!this.searchId) {
-      this.searchError.set('אנא הכנס מזהה משתמש');
+  searchUsers(): void {
+    if (!this.searchQuery.trim()) {
+      this.users.set(this.allUsers);
+      this.searchError.set('');
       return;
     }
 
-    this.searchError.set('');
-    this.loading.set(true);
-
-    this.userService.getUserById(this.searchId).subscribe({
-      next: (user) => {
-        this.users.set([user]);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.searchError.set('משתמש לא נמצא');
-        this.loading.set(false);
-      }
+    const query = this.searchQuery.trim();
+    const queryLower = query.toLowerCase();
+    
+    const filtered = this.allUsers.filter(user => {
+      const id = user.id?.toString() || '';
+      const firstName = user.firstName?.toLowerCase() || '';
+      const lastName = user.lastName?.toLowerCase() || '';
+      const email = user.email?.toLowerCase() || '';
+      const phone = user.phone || '';
+      const role = user.role?.toLowerCase() || '';
+      
+      return id.includes(query) ||
+             firstName.includes(queryLower) ||
+             lastName.includes(queryLower) ||
+             email.includes(queryLower) ||
+             phone.includes(query) ||
+             role.includes(queryLower) ||
+             `${firstName} ${lastName}`.includes(queryLower);
     });
+    
+    this.users.set(filtered);
+    
+    if (filtered.length === 0) {
+      this.searchError.set('לא נמצאו משתמשים תואמים');
+    } else {
+      this.searchError.set('');
+    }
   }
 
   openAddDialog(): void {

@@ -37,18 +37,23 @@ export class AdminModelsComponent implements OnInit {
   models = signal<ModelModel[]>([]);
   categories = signal<CategoryModel[]>([]);
   loading = signal(true);
+  searchQuery = '';
+  allModels: ModelModel[] = [];
   
   editDialog = signal(false);
   deleteDialog = signal(false);
+  actionDialog = signal(false);
   dressDialog = signal(false);
   editingModel: ModelModel | null = null;
   deletingModel: ModelModel | null = null;
+  selectedModel: ModelModel | null = null;
   addingModel = false;
   
   dresses = signal<DressModel[]>([]);
   editingDress: DressModel | null = null;
   deletingDress: DressModel | null = null;
   addingDress = false;
+  tempDresses: Array<{size: string, price: number, note?: string}> = [];
  
     ngOnInit(): void {
     const user = this.userService.currentUser();
@@ -77,9 +82,11 @@ export class AdminModelsComponent implements OnInit {
 
   loadModels(): void {
     this.loading.set(true);
+    this.searchQuery = '';
     
     this.modelService.getModels(undefined, undefined, undefined, undefined, undefined, 1, 100).subscribe({
       next: (data) => {
+        this.allModels = data.items;
         this.models.set(data.items);
         this.loading.set(false);
       },
@@ -87,6 +94,39 @@ export class AdminModelsComponent implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  searchModels(): void {
+    if (!this.searchQuery.trim()) {
+      this.models.set(this.allModels);
+      return;
+    }
+
+    const query = this.searchQuery.toLowerCase().trim();
+    const filtered = this.allModels.filter(model => 
+      model.name.toLowerCase().includes(query) ||
+      model.description.toLowerCase().includes(query)
+    );
+    this.models.set(filtered);
+  }
+
+  openActionDialog(model: ModelModel): void {
+    this.selectedModel = model;
+    this.actionDialog.set(true);
+  }
+
+  confirmEdit(): void {
+    this.actionDialog.set(false);
+    if (this.selectedModel) {
+      this.openEditDialog(this.selectedModel);
+    }
+  }
+
+  confirmDeleteFromAction(): void {
+    this.actionDialog.set(false);
+    if (this.selectedModel) {
+      this.openDeleteDialog(this.selectedModel);
+    }
   }
 
   openEditDialog(model: ModelModel): void {
@@ -109,6 +149,7 @@ export class AdminModelsComponent implements OnInit {
       categories: []
     };
     this.dresses.set([]);
+    this.tempDresses = [];
     this.editDialog.set(true);
   }
 
@@ -130,7 +171,7 @@ export class AdminModelsComponent implements OnInit {
       id: 0,
       modelName: this.editingModel!.name,
       size: '',
-      price: 0,
+      price: this.editingModel!.basePrice || 0,
       note: '',
       modelImgUrl: this.editingModel!.imgUrl
     };
@@ -170,6 +211,32 @@ export class AdminModelsComponent implements OnInit {
     }
   }
 
+  saveDressToList(): void {
+    if (!this.editingDress || !this.editingDress.size) {
+      alert('חובה למלא מידה');
+      return;
+    }
+
+    if (this.addingModel) {
+      this.tempDresses.push({
+        size: this.editingDress.size,
+        price: this.editingDress.price,
+        note: this.editingDress.note
+      });
+      this.editingDress = null;
+    } else {
+      this.saveDress();
+    }
+  }
+
+  cancelDressEdit(): void {
+    this.editingDress = null;
+  }
+
+  removeTempDress(index: number): void {
+    this.tempDresses.splice(index, 1);
+  }
+
   confirmDeleteDress(dress: DressModel): void {
     if (confirm(`האם למחוק שמלה במידה ${dress.size}?`)) {
       this.dressService.deleteDress(dress.id).subscribe({
@@ -187,7 +254,6 @@ export class AdminModelsComponent implements OnInit {
   saveModel(): void {
     if (!this.editingModel) return;
     
-    // וידוא שיש קטגוריות
     if (!this.editingModel.categories || this.editingModel.categories.length === 0) {
       alert('חובה לבחור לפחות קטגוריה אחת');
       return;
@@ -204,9 +270,13 @@ export class AdminModelsComponent implements OnInit {
     
     if (this.addingModel) {
       this.modelService.addModel(updateData).subscribe({
-        next: () => {
-          this.editDialog.set(false);
-          this.loadModels();
+        next: (newModel) => {
+          if (this.tempDresses.length > 0) {
+            this.saveTempDresses(newModel.id);
+          } else {
+            this.editDialog.set(false);
+            this.loadModels();
+          }
         },
         error: (err) => {
           console.error('שגיאה בהוספת מודל:', err);
@@ -225,6 +295,40 @@ export class AdminModelsComponent implements OnInit {
         }
       });
     }
+  }
+
+  saveTempDresses(modelId: number): void {
+    let completed = 0;
+    const total = this.tempDresses.length;
+
+    this.tempDresses.forEach(dress => {
+      const dressData = {
+        modelId: modelId,
+        size: dress.size,
+        price: dress.price,
+        note: dress.note || ''
+      };
+
+      this.dressService.addDress(dressData).subscribe({
+        next: () => {
+          completed++;
+          if (completed === total) {
+            this.editDialog.set(false);
+            this.loadModels();
+            this.tempDresses = [];
+          }
+        },
+        error: (err) => {
+          console.error('שגיאה בהוספת שמלה:', err);
+          completed++;
+          if (completed === total) {
+            this.editDialog.set(false);
+            this.loadModels();
+            this.tempDresses = [];
+          }
+        }
+      });
+    });
   }
 
   confirmDelete(): void {

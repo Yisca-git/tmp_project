@@ -78,7 +78,7 @@
         </tr>
 
         <!-- expanded details row -->
-        <tr *ngIf="isExpanded(order)">
+        <tr *ngIf="isExpanded(order)" class="expanded-row">
           <td colspan="8">
             <div class="order-details">
               <h4>פרטי הזמנה - {{ order.id }} | סטטוס: {{ order.statusName || '-' }}</h4>

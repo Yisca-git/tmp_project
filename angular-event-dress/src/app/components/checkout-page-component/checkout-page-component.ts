@@ -92,6 +92,9 @@ export  class CheckoutPageComponent {
       return;
     }
 
+    let completedOrders = 0;
+    let hasError = false;
+
     selectedDrafts.forEach(draft => {
       const newOrder: NewOrderModel = {
         orderDate: new Date().toISOString().split('T')[0],
@@ -112,16 +115,24 @@ export  class CheckoutPageComponent {
       this.orderService.addOrder(newOrder).subscribe({
         next: (savedOrder) => {
           console.log(`הזמנה מספר ${savedOrder.id} נשלחה בהצלחה!`);
+          completedOrders++;
+          
+          if (completedOrders === selectedDrafts.length && !hasError) {
+            this.cartService.removeSelectedDrafts();
+            this.cartService.isCartOpen.set(false);
+            this.showAlert('ההזמנות שנבחרו נשלחו בהצלחה!');
+          }
         },
         error: (err) => {
           console.error('שגיאה בשליחת ההזמנה:', err);
-          this.showAlert('ארעה שגיאה בשליחת אחת ההזמנות', true);
+          hasError = true;
+          completedOrders++;
+          
+          if (completedOrders === selectedDrafts.length) {
+            this.showAlert('ארעה שגיאה בשליחת אחת או יותר מההזמנות', true);
+          }
         }
       });
     });
-
-    this.cartService.removeSelectedDrafts();
-    this.cartService.isCartOpen.set(false);
-    this.showAlert('ההזמנות שנבחרו נשלחו בהצלחה!');
   }
 }

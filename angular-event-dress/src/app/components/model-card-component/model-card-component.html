@@ -1,9 +1,14 @@
 <p-card class="model-card" (click)="onCardClick()" [style]="{'cursor': 'pointer'}">
   <ng-template pTemplate="header">
-    <img [src]="model.imgUrl" 
-         [alt]="model.name" 
-         class="card-image"
-         (error)="onImageError($event)">
+    <div class="image-container">
+      <img [src]="model.imgUrl" 
+           [alt]="model.name" 
+           class="card-image"
+           (error)="onImageError($event)">
+      <div class="hover-overlay">
+        <span class="view-text">לחץ לצפייה</span>
+      </div>
+    </div>
   </ng-template>
   
   <div class="card-content">

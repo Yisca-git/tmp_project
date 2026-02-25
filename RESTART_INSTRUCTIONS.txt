@@ -1,0 +1,20 @@
+הוראות להפעלה מחדש:
+========================
+
+1. עצור את ה-Backend (C# API)
+2. הפעל מחדש את ה-Backend
+3. רענן את הדפדפן באפליקציית Angular (F5)
+
+השינויים שבוצעו:
+==================
+✓ OrderDTO.cs - נוספו שדות UserEmail ו-UserPhone
+✓ AutoMapping.cs - נוסף מיפוי של Email ו-Phone מ-User
+✓ order.model.ts (Angular) - נוספו שדות userEmail ו-userPhone
+✓ admin-orders-component.html - נוספה תצוגה של מייל וטלפון
+✓ admin-orders-component.scss - עיצוב grid ל-4 פרטים
+
+לאחר הפעלה מחדש, פרטי המשתמש יכללו:
+- שם מלא
+- מזהה משתמש
+- מייל
+- טלפון

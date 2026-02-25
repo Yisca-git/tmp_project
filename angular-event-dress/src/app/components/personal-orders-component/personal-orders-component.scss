@@ -147,19 +147,30 @@ $bg-color: #f4eeee;
         .item-row {
           display: flex;
           justify-content: space-between;
+          align-items: center;
           padding: 0.8rem;
           background: $bg-color;
           margin-bottom: 0.5rem;
           border-radius: 6px;
           text-align: right;
+          gap: 1rem;
 
           .item-name {
             flex: 1;
           }
 
+          .item-size {
+            color: $main-color;
+            font-weight: 500;
+            background: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+          }
+
           .item-code {
             color: #666;
-            margin: 0 1rem;
+            font-size: 0.85rem;
           }
 
           .item-price {

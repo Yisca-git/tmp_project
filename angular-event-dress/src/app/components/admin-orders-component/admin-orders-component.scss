@@ -205,6 +205,30 @@ $bg-color: #f4eeee;
     font-weight: 600;
   }
 
+  .details-btn {
+    background: transparent;
+    border: none;
+    color: $main-color;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-family: $main-font;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $light-pink;
+      color: darken($main-color, 10%);
+    }
+
+    i {
+      font-size: 1rem;
+    }
+  }
+
   .order-details {
     background: linear-gradient(135deg, $light-pink 0%, color.scale($light-pink, $lightness: 20%) 100%);
     padding: 2rem;

@@ -32,6 +32,66 @@ $bg-color: #f4eeee;
     max-width: 1400px;
     margin: 0 auto;
 
+    .title-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid #e8e0e2;
+      gap: 2rem;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    .title-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        width: 100%;
+      }
+    }
+
+    .search-compact {
+      position: relative;
+      min-width: 300px;
+
+      input {
+        width: 100%;
+        padding: 0.75rem 2.5rem 0.75rem 1rem;
+        border: 2px solid $accent-color;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-family: $main-font;
+        transition: all 0.3s ease;
+
+        &:focus {
+          outline: none;
+          border-color: $main-color;
+          box-shadow: 0 0 0 3px rgba($main-color, 0.1);
+        }
+
+        &::placeholder {
+          color: color.scale($main-color, $lightness: 50%);
+        }
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: color.scale($main-color, $lightness: 30%);
+        pointer-events: none;
+      }
+    }
+
     .page-title {
       text-align: right;
       margin: 0 0 0.5rem 0;
@@ -44,12 +104,10 @@ $bg-color: #f4eeee;
 
     .page-subtitle {
       text-align: right;
-      margin: 0 0 2rem 0;
+      margin: 0;
       color: color.scale($main-color, $lightness: 30%);
       font-size: 0.95rem;
       font-weight: 400;
-      padding-bottom: 1.5rem;
-      border-bottom: 2px solid #e8e0e2;
     }
   }
 
@@ -282,11 +340,42 @@ $bg-color: #f4eeee;
         padding: 1.5rem;
         text-align: right;
         font-weight: 600;
+        font-size: 1.3rem;
       }
 
       .p-dialog-content {
-        padding: 2rem;
+        padding: 2.5rem;
         background: white;
+      }
+
+      .p-inputtext, .p-inputnumber-input {
+        width: 100%;
+        padding: 0.9rem 1.2rem !important;
+        border: 2px solid #e8e8e8 !important;
+        border-radius: 10px !important;
+        font-family: $main-font !important;
+        font-size: 0.95rem !important;
+        transition: all 0.3s ease !important;
+        background: #fafafa !important;
+
+        &:focus {
+          outline: none !important;
+          border-color: $main-color !important;
+          background: white !important;
+          box-shadow: 0 0 0 3px rgba($main-color, 0.08) !important;
+        }
+      }
+
+      .p-select {
+        width: 100%;
+        border: 2px solid #e8e8e8 !important;
+        border-radius: 10px !important;
+        background: #fafafa !important;
+
+        &:focus {
+          border-color: $main-color !important;
+          box-shadow: 0 0 0 3px rgba($main-color, 0.08) !important;
+        }
       }
     }
   }
@@ -348,33 +437,8 @@ $bg-color: #f4eeee;
     direction: rtl;
     text-align: right;
 
-    .dialog-intro {
-      text-align: center;
+    .form-section {
       margin-bottom: 2rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid #f0f0f0;
-
-      .icon-wrapper {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 1rem;
-        background: linear-gradient(135deg, $light-pink 0%, $accent-color 100%);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        i {
-          font-size: 2.5rem;
-          color: $main-color;
-        }
-      }
-
-      p {
-        margin: 0;
-        color: color.scale($main-color, $lightness: 20%);
-        font-size: 0.95rem;
-      }
     }
 
     .form-row {
@@ -385,6 +449,8 @@ $bg-color: #f4eeee;
     }
 
     .form-field {
+      margin-bottom: 1.5rem;
+
       label {
         display: block;
         margin-bottom: 0.6rem;
@@ -415,27 +481,45 @@ $bg-color: #f4eeee;
         }
       }
     }
-
-    .full-width {
-      grid-column: 1 / -1;
-    }
   }
 
-  ::ng-deep .p-dialog {
-    .p-dialog-header {
-      background: white;
-      color: $main-color;
-      border-radius: 16px 16px 0 0;
-      padding: 2rem 2.5rem 1.5rem;
-      text-align: center;
-      font-weight: 700;
-      font-size: 1.5rem;
-      border-bottom: none;
-    }
+  .dialog-actions {
+    display: flex;
+    gap: 1rem;
+    padding-top: 2rem;
+    border-top: 2px solid #f0f0f0;
+    justify-content: flex-start;
+    flex-direction: row-reverse;
 
-    .p-dialog-content {
-      padding: 0 2.5rem 2.5rem;
-      background: white;
+    ::ng-deep .p-button {
+      font-family: $main-font !important;
+      border-radius: 12px !important;
+      padding: 0.85rem 2rem !important;
+      font-weight: 600 !important;
+      font-size: 1rem !important;
+      transition: all 0.3s ease !important;
+
+      &:not(.p-button-secondary) {
+        background: linear-gradient(135deg, $main-color 0%, color.scale($main-color, $lightness: -10%) 100%) !important;
+        border: none !important;
+        box-shadow: 0 4px 15px rgba($main-color, 0.3) !important;
+
+        &:hover {
+          transform: translateY(-2px) !important;
+          box-shadow: 0 6px 20px rgba($main-color, 0.4) !important;
+        }
+      }
+
+      &.p-button-secondary {
+        background: $light-pink !important;
+        border: 2px solid $accent-color !important;
+        color: $main-color !important;
+
+        &:hover {
+          background: $accent-color !important;
+          border-color: $main-color !important;
+        }
+      }
     }
   }
 }

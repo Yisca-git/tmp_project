@@ -19,6 +19,8 @@ namespace DTOs
 
         [Required]
         public string ModelName { get; set; }
+
+        public string? Size { get; set; }
     }
     
 }

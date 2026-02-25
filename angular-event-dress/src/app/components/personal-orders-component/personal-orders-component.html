@@ -67,6 +67,9 @@
           @for (item of selectedOrder().orderItems; track item.dressId) {
             <div class="item-row">
               <span class="item-name">{{ item.modelName }}</span>
+              @if (item.size) {
+                <span class="item-size">מידה: {{ item.size }}</span>
+              }
               <span class="item-code">#{{ item.dressId }}</span>
               <span class="item-price">{{ item.dressPrice }} ₪</span>
             </div>
