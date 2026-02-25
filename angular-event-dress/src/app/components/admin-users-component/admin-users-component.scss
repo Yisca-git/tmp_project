@@ -1,0 +1,441 @@
+@use "sass:color";
+$main-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$main-color: #6b5b5e;
+$accent-color: #d4c5c7;
+$light-pink: #f8f1f2;
+$bg-color: #f4eeee;
+
+.admin-users-container {
+  font-family: $main-font;
+  background-color: #fafafa;
+  padding: 0;
+  direction: rtl;
+  color: $main-color;
+  min-height: 100vh;
+
+  .header-section {
+    background: #ffffff;
+    border-bottom: 1px solid #e8e0e2;
+    padding: 1rem 3rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    .header-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .users-content {
+    padding: 3rem 3rem;
+    background: #fafafa;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    .page-title {
+      text-align: right;
+      margin: 0 0 0.5rem 0;
+      color: $main-color;
+      font-size: 2rem;
+      font-weight: 600;
+      font-family: $main-font;
+      letter-spacing: 0.5px;
+    }
+
+    .page-subtitle {
+      text-align: right;
+      margin: 0 0 2rem 0;
+      color: color.scale($main-color, $lightness: 30%);
+      font-size: 0.95rem;
+      font-weight: 400;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid #e8e0e2;
+    }
+  }
+
+  .search-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: $light-pink;
+    border-radius: 16px;
+    border: 1px solid $accent-color;
+  }
+
+  .search-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+
+    ::ng-deep input {
+      flex: 1;
+      min-width: 200px;
+      font-size: 0.9rem;
+      font-family: $main-font;
+      border-radius: 10px;
+      border: 1px solid $accent-color;
+    }
+
+    ::ng-deep .p-button {
+      font-family: $main-font !important;
+      background: $main-color !important;
+      border: 1px solid $main-color !important;
+      color: #ffffff !important;
+      border-radius: 10px !important;
+
+      &:hover {
+        background: color.scale($main-color, $lightness: -10%) !important;
+      }
+    }
+  }
+
+  .error-message {
+    color: #c44545;
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background-color: #fbf3f3;
+    border: 1px solid #e2bcbc;
+    border-radius: 12px;
+    text-align: right;
+    font-size: 0.9rem;
+  }
+
+  .edit-dialog-content {
+    direction: rtl;
+    text-align: right;
+
+    .user-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: $light-pink;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      flex-direction: row-reverse;
+
+      .user-avatar {
+        width: 60px;
+        height: 60px;
+        background: $main-color;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        i {
+          font-size: 2rem;
+          color: white;
+        }
+      }
+
+      .user-details {
+        flex: 1;
+        text-align: right;
+
+        h3 {
+          margin: 0 0 0.3rem 0;
+          color: $main-color;
+          font-size: 1.3rem;
+          font-weight: 600;
+        }
+
+        .user-id {
+          color: #999;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .info-section {
+      background: $bg-color;
+      border: 1px solid $accent-color;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid $accent-color;
+        text-align: right;
+        flex-direction: row-reverse;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .label {
+          color: #666;
+          font-size: 0.9rem;
+          font-weight: 500;
+        }
+
+        .value {
+          color: $main-color;
+          font-weight: 400;
+
+          &.current-role {
+            background: $main-color;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+          }
+        }
+      }
+    }
+
+    .role-section {
+      label {
+        display: block;
+        margin-bottom: 0.8rem;
+        color: $main-color;
+        font-weight: 600;
+        text-align: right;
+        font-size: 1rem;
+      }
+
+      ::ng-deep .p-select {
+        width: 100%;
+        text-align: right;
+        direction: rtl;
+      }
+
+      .info-message {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        color: #856404;
+        text-align: right;
+        flex-direction: row-reverse;
+
+        i {
+          color: #ffc107;
+          font-size: 1.2rem;
+          flex-shrink: 0;
+        }
+      }
+    }
+  }
+
+  .dialog-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid #f0f0f0;
+    justify-content: flex-start;
+    flex-direction: row-reverse;
+
+    ::ng-deep .p-button {
+      font-family: $main-font !important;
+      border-radius: 12px !important;
+      padding: 0.85rem 2rem !important;
+      font-weight: 600 !important;
+      font-size: 1rem !important;
+      transition: all 0.3s ease !important;
+
+      &:not(.p-button-secondary) {
+        background: linear-gradient(135deg, $main-color 0%, color.scale($main-color, $lightness: -10%) 100%) !important;
+        border: none !important;
+        box-shadow: 0 4px 15px rgba($main-color, 0.3) !important;
+
+        &:hover {
+          transform: translateY(-2px) !important;
+          box-shadow: 0 6px 20px rgba($main-color, 0.4) !important;
+        }
+      }
+
+      &.p-button-secondary {
+        background: $light-pink !important;
+        border: 2px solid $accent-color !important;
+        color: $main-color !important;
+
+        &:hover {
+          background: $accent-color !important;
+          border-color: $main-color !important;
+        }
+      }
+    }
+  }
+
+  ::ng-deep {
+    .p-dialog {
+      direction: rtl;
+      border-radius: 16px;
+      font-family: $main-font;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+
+      .p-dialog-header {
+        background: $main-color;
+        color: white;
+        border-radius: 16px 16px 0 0;
+        padding: 1.5rem;
+        text-align: right;
+        font-weight: 600;
+      }
+
+      .p-dialog-content {
+        padding: 2rem;
+        background: white;
+      }
+    }
+  }
+
+  .admin-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: $main-color;
+    color: white;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .actions-section {
+    background: white;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    .section-info {
+      h3 {
+        margin: 0 0 0.5rem 0;
+        color: $main-color;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      p {
+        margin: 0;
+        color: color.scale($main-color, $lightness: 30%);
+        font-size: 0.9rem;
+      }
+    }
+
+    ::ng-deep .p-button {
+      font-family: $main-font !important;
+      background: $main-color !important;
+      border: none !important;
+      color: white !important;
+      border-radius: 10px !important;
+      padding: 0.75rem 1.5rem !important;
+      font-size: 1rem !important;
+      font-weight: 500 !important;
+
+      &:hover {
+        background: color.scale($main-color, $lightness: -10%) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+      }
+    }
+  }
+
+  .add-dialog-content {
+    direction: rtl;
+    text-align: right;
+
+    .dialog-intro {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid #f0f0f0;
+
+      .icon-wrapper {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1rem;
+        background: linear-gradient(135deg, $light-pink 0%, $accent-color 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+          font-size: 2.5rem;
+          color: $main-color;
+        }
+      }
+
+      p {
+        margin: 0;
+        color: color.scale($main-color, $lightness: 20%);
+        font-size: 0.95rem;
+      }
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-field {
+      label {
+        display: block;
+        margin-bottom: 0.6rem;
+        color: $main-color;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.9rem 1.2rem;
+        border: 2px solid #e8e8e8;
+        border-radius: 10px;
+        font-family: $main-font;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        background: #fafafa;
+
+        &:focus {
+          outline: none;
+          border-color: $main-color;
+          background: white;
+          box-shadow: 0 0 0 3px rgba($main-color, 0.08);
+        }
+
+        &::placeholder {
+          color: #bbb;
+        }
+      }
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+  }
+
+  ::ng-deep .p-dialog {
+    .p-dialog-header {
+      background: white;
+      color: $main-color;
+      border-radius: 16px 16px 0 0;
+      padding: 2rem 2.5rem 1.5rem;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      border-bottom: none;
+    }
+
+    .p-dialog-content {
+      padding: 0 2.5rem 2.5rem;
+      background: white;
+    }
+  }
+}

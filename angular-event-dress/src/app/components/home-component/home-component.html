@@ -1,0 +1,54 @@
+<div class="home-container">
+  <section class="hero-section">
+    <div class="hero-content">
+      <span class="sub-title">קולקציית 2026</span>
+      <h1>יוקרה שנשזרת בכל תפר</h1>
+      <p>גלי את מבחר השמלות האקסקלוסיביות שלנו לאירועים בלתי נשכחים. יופי, נוחות וסטייל במקום אחד.</p>
+      <p-button label="לצפייה בקולקציה המלאה" 
+                icon="pi pi-arrow-left" 
+                iconPos="left" 
+                routerLink="/collection" 
+                severity="secondary" 
+                [raised]="true">
+      </p-button>
+    </div>
+  </section>
+
+  <section class="section-container">
+    <div class="section-header">
+      <h2>הקטגוריות שלנו</h2>
+      <div class="header-line"></div>
+    </div>
+    
+    <div class="category-grid">
+      @for (cat of categories(); track cat.id) {
+        <div class="category-item" (click)="navigateToCategory(cat.id)" style="cursor: pointer;">
+          <div class="category-image-wrapper">
+            <img [src]="categoryImages[cat.id] || '/assets/default-cat.png'" [alt]="cat.name">
+            <div class="category-overlay">
+              <h3>{{ cat.name }}</h3>
+              <span>צפי בדגמים</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="section-container bg-soft">
+    <div class="section-header">
+      <h2>הבחירות הפופולריות</h2>
+      <p>הדגמים שכולן אוהבות עכשיו</p>
+    </div>
+    
+    <div class="models-grid">
+      @for (model of popularDresses(); track model.id) {
+        <div class="model-item">
+          <a [routerLink]="['/model', model.id]" class="model-link">
+            <app-model-card-component [model]="model"></app-model-card-component>
+          </a>
+        </div>
+      }
+    </div>
+  </section>
+</div>

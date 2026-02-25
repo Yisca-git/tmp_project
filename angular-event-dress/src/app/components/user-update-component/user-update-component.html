@@ -1,0 +1,41 @@
+
+<div class="update-container">
+  <p-card header="עדכון פרטים אישיים">
+    <form (ngSubmit)="onSubmit()" #updateForm="ngForm">
+      <div class="field">
+        <label for="firstName">שם פרטי</label>
+        <input pInputText id="firstName" [(ngModel)]="user.firstName" name="firstName" required />
+      </div>
+
+      <div class="field">
+        <label for="lastName">שם משפחה</label>
+        <input pInputText id="lastName" [(ngModel)]="user.lastName" name="lastName" required />
+      </div>
+
+      <div class="field">
+        <label for="email">אימייל</label>
+        <input pInputText id="email" type="email" [(ngModel)]="user.email" name="email" />
+      </div>
+
+      <div class="field">
+        <label for="phone">טלפון</label>
+        <input pInputText id="phone" [(ngModel)]="user.phone" name="phone" required />
+      </div>
+
+      <div class="field">
+        <label for="password">סיסמה</label>
+        <p-password [(ngModel)]="user.password" name="password" [feedback]="true" required></p-password>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="error-message">{{ errorMessage() }}</div>
+      }
+
+      @if (successMessage()) {
+        <div class="success-message">{{ successMessage() }}</div>
+      }
+
+      <p-button type="submit" label="עדכן פרטים" [loading]="loading()" [disabled]="!updateForm.valid"></p-button>
+    </form>
+  </p-card>
+</div>

@@ -1,0 +1,120 @@
+<div class="admin-users-container">
+  <div class="header-section">
+    <div class="header-actions">
+      <p-button label="חזור לאיזור ניהול" icon="pi pi-arrow-right" (onClick)="goBack()"></p-button>
+    </div>
+  </div>
+
+  <main class="users-content">
+    <h2 class="page-title">ניהול משתמשים</h2>
+    <p class="page-subtitle">חיפוש משתמשים והוספת משתמשים חדשים</p>
+
+    <div class="actions-section">
+      <div class="section-info">
+        <h3>הוספת משתמש חדש</h3>
+        <p>הוסף משתמש או מנהל חדש למערכת</p>
+      </div>
+      <p-button label="הוסף משתמש" icon="pi pi-plus" (onClick)="openAddDialog()"></p-button>
+    </div>
+
+    <div class="search-section">
+      <div class="search-controls">
+        <input pInputText type="number" [(ngModel)]="searchId" placeholder="הכנס מזהה משתמש" />
+        <p-button label="חפש" icon="pi pi-search" (onClick)="searchUserById()"></p-button>
+        <p-button label="הצג הכל" icon="pi pi-list" severity="secondary" (onClick)="loadAllUsers()"></p-button>
+      </div>
+      
+      <ng-container *ngIf="searchError()">
+        <div class="error-message">{{ searchError() }}</div>
+      </ng-container>
+    </div>
+
+    <p-table [value]="users()" [loading]="loading()" styleClass="p-datatable-striped">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>מזהה</th>
+          <th>שם פרטי</th>
+          <th>שם משפחה</th>
+          <th>אימייל</th>
+          <th>טלפון</th>
+          <th>תפקיד</th>
+          <th>פעולות</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-user>
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.firstName }}</td>
+          <td>{{ user.lastName }}</td>
+          <td>{{ user.email || 'לא צוין' }}</td>
+          <td>{{ user.phone }}</td>
+          <td>
+            <span [class.admin-badge]="(user.role || '').toLowerCase() === 'admin'">
+              {{ (user.role || '').toLowerCase() === 'admin' ? 'מנהל' : 'משתמש' }}
+            </span>
+          </td>
+          <td>-</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" style="text-align: center;">אין משתמשים במערכת</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </main>
+</div>
+
+<p-dialog [(visible)]="addDialog" header="הוספת משתמש חדש" [modal]="true" [style]="{width: '650px'}">
+  <div class="add-dialog-content">
+    <div class="dialog-intro">
+      <div class="icon-wrapper">
+        <i class="pi pi-user-plus"></i>
+      </div>
+      <p>מלא את הפרטים להוספת משתמש או מנהל חדש למערכת</p>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label>שם פרטי *</label>
+        <input pInputText [(ngModel)]="newUser.firstName" placeholder="הכנס שם פרטי" />
+      </div>
+      <div class="form-field">
+        <label>שם משפחה *</label>
+        <input pInputText [(ngModel)]="newUser.lastName" placeholder="הכנס שם משפחה" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label>אימייל</label>
+        <input pInputText [(ngModel)]="newUser.email" placeholder="הכנס אימייל" />
+      </div>
+      <div class="form-field">
+        <label>טלפון *</label>
+        <input pInputText [(ngModel)]="newUser.phone" placeholder="הכנס טלפון" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label>סיסמה *</label>
+        <input pInputText type="password" [(ngModel)]="newUser.password" placeholder="מינימום 6 תווים" />
+      </div>
+      <div class="form-field">
+        <label>תפקיד *</label>
+        <p-select [(ngModel)]="newUser.role"
+                  [options]="roleOptions"
+                  optionLabel="label"
+                  optionValue="value"
+                  placeholder="בחר תפקיד"
+                  [style]="{width: '100%'}"></p-select>
+      </div>
+    </div>
+  </div>
+  
+  <div class="dialog-actions">
+    <p-button label="ביטול" severity="secondary" (onClick)="addDialog.set(false)"></p-button>
+    <p-button label="הוסף משתמש" icon="pi pi-check" (onClick)="saveUser()"></p-button>
+  </div>
+</p-dialog>

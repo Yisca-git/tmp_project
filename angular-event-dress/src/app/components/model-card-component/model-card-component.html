@@ -1,0 +1,15 @@
+<p-card class="model-card" (click)="onCardClick()" [style]="{'cursor': 'pointer'}">
+  <ng-template pTemplate="header">
+    <img [src]="model.imgUrl" 
+         [alt]="model.name" 
+         class="card-image"
+         (error)="onImageError($event)">
+  </ng-template>
+  
+  <div class="card-content">
+    <h3 class="model-name">{{ model.name }}</h3>
+    <div class="price-section">
+      <span class="price">{{ model.basePrice }}</span>
+    </div>
+  </div>
+</p-card>

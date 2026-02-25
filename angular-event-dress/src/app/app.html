@@ -1,0 +1,15 @@
+<app-header></app-header>
+
+<p-drawer 
+  [visible]="cartService.isCartOpen()" 
+  (visibleChange)="cartService.isCartOpen.set($event)"
+  position="left" 
+  [style]="{'width': '400px'}"
+  header="הסל שלי">
+  
+  <app-cart></app-cart>
+  
+</p-drawer>
+
+<router-outlet></router-outlet>
+<app-footer></app-footer>

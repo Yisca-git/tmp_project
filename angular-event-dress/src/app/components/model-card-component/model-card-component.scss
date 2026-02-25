@@ -1,0 +1,127 @@
+$main-font: "Nunito Sans", "Poppins", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$main-color: #6b5b5e;
+$bg-color: #faf8f9;
+
+.model-card {
+  height: 100%;
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-family: $main-font;
+  background: $bg-color;
+  border: 1px solid #e8e8e8;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 6px 6px 0 0;
+  }
+
+  .card-content {
+    padding: 0.6rem 1rem 0;
+    text-align: center;
+    direction: rtl;
+    background: $bg-color;
+
+    .model-name {
+      font-size: 0.9rem;
+      font-weight: 300;
+      margin-bottom: 0.1rem;
+      color: $main-color;
+      font-family: $main-font;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+    }
+
+    .price-section {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+      margin: 0;
+
+      .price {
+        font-size: 1.1rem;
+        font-weight: 200;
+        color: $main-color;
+        font-family: $main-font;
+        letter-spacing: 0.8px;
+      }
+
+      .price-label {
+        font-size: 0.7rem;
+        // color: lighten($main-color, 20%);
+        font-family: $main-font;
+        font-weight: 200;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  :host ::ng-deep {
+    .p-card {
+      height: auto !important;
+      display: flex;
+      flex-direction: column;
+      background: $bg-color;
+      border: 1px solid #e8e8e8;
+      border-radius: 12px;
+      overflow: hidden;
+      
+      .p-card-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: $bg-color;
+      }
+
+      .p-card-content {
+        flex: none !important;
+        background: $bg-color;
+        padding: 0 !important;
+        margin: 0 !important;
+        min-height: auto !important;
+        height: auto !important;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .model-card {
+    .card-image {
+      height: 200px;
+    }
+    
+    .card-content {
+      padding: 1rem 1rem 0.5rem;
+      
+      .model-name {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .price-section {
+        margin-top: 0.3rem;
+        margin-bottom: 0.5rem;
+        
+        .price {
+          font-size: 1.2rem;
+        }
+        
+        .price-label {
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
+}

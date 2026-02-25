@@ -1,0 +1,53 @@
+.cart-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0; // המגירה כבר נותנת ריפוד
+  box-shadow: none; // אין צורך בצל בתוך מגירה
+
+  .cart-items-list {
+    flex: 1; // נותן לרשימה לתפוס את כל הגובה הפנוי
+    overflow-y: auto; // מוסיף גלילה רק לרשימת הפריטים
+    padding: 10px;
+  }
+}
+
+.cart-footer {
+  border-top: 1px solid #eee;
+  padding: 20px;
+  background: #f9f9f9;
+}
+/* עיצוב המעטפת של PrimeNG */
+::ng-deep {
+  .p-drawer {
+    /* עיצוב ה-Header וה-X הבהיר */
+    .p-drawer-header {
+      flex-direction: row-reverse !important; // X משמאל
+      padding: 1.2rem 1.5rem !important;
+      border-bottom: 1px solid #f8f1f2 !important;
+
+      .p-drawer-close-button {
+        background: #f8f1f2 !important; // עיגול ורוד-בהיר עדין
+        color: #6b5b5e !important;
+        width: 34px !important;
+        height: 34px !important;
+        border-radius: 50% !important;
+        border: none !important;
+        
+        &:hover { background: #efe4e4 !important; }
+      }
+
+      .p-drawer-title {
+        font-weight: 300 !important;
+        color: #6b5b5e !important;
+        font-size: 1.3rem !important;
+      }
+    }
+    
+    /* ביטול גלילה מיותרת של המגירה עצמה כדי שהקומפוננטה תשלוט */
+    .p-drawer-content {
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+  }
+}
