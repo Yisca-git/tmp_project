@@ -2,6 +2,10 @@
 
 A full-stack web application for renting event dresses, featuring an AI-powered chatbot that answers customer questions in natural language.
 
+## Demo
+
+📹 [Watch the AI Chatbot in action](https://drive.google.com/file/d/1R6DZbvcxyJtH9ns6I61cNqQoyqItiqtt/view?usp=drive_link)
+
 ## Tech Stack
 
 | Layer | Technology |
