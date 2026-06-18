@@ -8,6 +8,7 @@ import { CartComponent } from './components/cart-component/cart-component';
 import { CartService } from './services/cart-service';
 import { DrawerModule } from 'primeng/drawer'; 
 import { ToastModule } from 'primeng/toast';  
+import { ChatComponent } from './components/chat-component/chat-component';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -19,7 +20,8 @@ import { ToastModule } from 'primeng/toast';
     FormsModule,
     CartComponent ,
     DrawerModule,
-    ToastModule
+    ToastModule,
+    ChatComponent
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']

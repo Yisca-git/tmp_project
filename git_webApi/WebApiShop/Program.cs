@@ -58,6 +58,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // --- Controllers ---
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 
 // --- Swagger ---
 builder.Services.AddSwaggerGen(c =>

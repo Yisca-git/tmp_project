@@ -1,0 +1,31 @@
+<div class="chat-widget">
+  <button class="chat-toggle" (click)="toggle()">
+    {{ isOpen() ? '✕' : '💬' }}
+  </button>
+
+  @if (isOpen()) {
+    <div class="chat-box">
+      <div class="chat-header">סייעת החנות</div>
+
+      <div class="chat-messages">
+        @for (msg of messages(); track $index) {
+          <div class="message" [class.user]="msg.isUser" [class.bot]="!msg.isUser">
+            {{ msg.text }}
+          </div>
+        }
+        @if (isLoading()) {
+          <div class="message bot">...</div>
+        }
+      </div>
+
+      <div class="chat-input">
+        <input
+          [(ngModel)]="input"
+          (keydown)="onKeyDown($event)"
+          placeholder="כתבי הודעה..."
+          [disabled]="isLoading()" />
+        <button (click)="send()" [disabled]="isLoading()">שלח</button>
+      </div>
+    </div>
+  }
+</div>
